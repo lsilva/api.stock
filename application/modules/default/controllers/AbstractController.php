@@ -102,7 +102,8 @@ class AbstractController extends Zend_Rest_Controller
             else
                 $resource = key($params);
         }
-        $arrElement = array();              
+        $arrElement = array();
+
         if($resource == "form")
         {
             $record = array();
@@ -132,6 +133,9 @@ class AbstractController extends Zend_Rest_Controller
                 $arrElement[] = htmlentities(htmlspecialchars($elements[$field]->setDecorators(array('ViewHelper')), ENT_IGNORE));
 
         }
+        elseif($resource == "title")
+            $arrElement = array('title' => $this->_model->getTitle());
+
         else
             //Verifica se existe outros tratamentos para o resource passado
             if(method_exists($this,"othersResource"))
@@ -139,18 +143,9 @@ class AbstractController extends Zend_Rest_Controller
 
         //Converte em UTF8 para o retorno
         //$arrElement = array_map("utf8_encode",$arrElement);
-/*
-var_dump($arrElement);        
-die("WHERE - 3");
-*/
         $this->dispachResponse($this->_response_type, $arrElement);
     }
-/*
-    public function othersResource($resource)
-    {
 
-    }
-*/
     public function postAction()
     {
         $this->view->code = 501;

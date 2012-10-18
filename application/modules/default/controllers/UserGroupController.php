@@ -14,7 +14,7 @@ class UserGroupController extends Zend_Rest_Controller
         $response = "";
         foreach($arrAccept as $_accept)
         {
-            switch ($_accept) 
+            switch ($_accept)
             {
                 case 'application/xml':
                 case 'text/xml':
@@ -22,15 +22,15 @@ class UserGroupController extends Zend_Rest_Controller
                     break;
                 case 'application/json':
                     $response = "json";
-                    break;        
+                    break;
                 case 'text/csv':
                     $response = "csv";
-                    break;        
+                    break;
                 case 'text/plain':
                     $response = "plain";
-                    break;  
+                    break;
                 default:
-                    $response = "json";                  
+                    $response = "json";
             }
             if(!empty($response))
                 break;
@@ -53,11 +53,11 @@ class UserGroupController extends Zend_Rest_Controller
         {
             case 'en':
             case 'en-us':
-                $this->translate->setLocale('en_US');   
+                $this->translate->setLocale('en_US');
             case 'pt-br':
             default:
-                $this->translate->setLocale('pt_BR');   
-        }         
+                $this->translate->setLocale('pt_BR');
+        }
 
         // define as possibilidades de formatos de saída para cada método e escolhe formato definido acima
         $this->_helper->contextSwitch()->addActionContexts(array(
@@ -67,9 +67,9 @@ class UserGroupController extends Zend_Rest_Controller
             'put'    => array('xml', 'json'),
             'delete' => array('xml', 'json')
             ))->initContext($response);
-        
+
         Zend_Loader::loadClass('UserGroup');
-        $this->_model = new UserGroup();   
+        $this->_model = new UserGroup();
         $this->_helper->layout->disableLayout();
         $this->_response_type = $response;
         $this->_itemsPerPage = 20;
@@ -83,11 +83,11 @@ class UserGroupController extends Zend_Rest_Controller
    }
 
     public function getAction()
-    {        
+    {
         $id = $this->getRequest()->getParam('id');
         $resource = "";
         if(!empty($id) && is_numeric($id))
-            $resource = "get";  
+            $resource = "get";
         else
         {
             $params = $this->getRequest()->getParams();
@@ -99,7 +99,7 @@ class UserGroupController extends Zend_Rest_Controller
                 $resource = $this->getRequest()->getParam('id');
             else
                 $resource = key($params);
-        }        
+        }
         $arrElement = array();
         switch($resource)
         {
@@ -121,7 +121,7 @@ class UserGroupController extends Zend_Rest_Controller
                 Fgsl_Form_Edit::MODEL => $this->_model
                 );
                 $form = new Fgsl_Form_Edit($options);
-                //Obtem os elementos do formulário   
+                //Obtem os elementos do formulário
                 $elements = $form->getElements();
                 //Remove todos os decoradores do formulário
                 foreach($elements as $field => $element)
@@ -129,12 +129,12 @@ class UserGroupController extends Zend_Rest_Controller
                 break;
         }
 
-        $this->dispachResponse($this->_response_type, $arrElement);       
+        $this->dispachResponse($this->_response_type, $arrElement);
     }
 
     public function postAction()
     {
-        $this->view->code = 501;        
+        $this->view->code = 501;
         $this->view->message = 'Method not implemented';
 
         $this->guardData(Fgsl_Session_Namespace::get('post'));
@@ -160,7 +160,7 @@ class UserGroupController extends Zend_Rest_Controller
                 $arrData[$key] = $data;
             }
         }
-  /*      $this->view->code = 501;  
+  /*      $this->view->code = 501;
         $this->view->message = serialize($arrData);
         $this->getResponse()->setHttpResponseCode($this->view->code);
         $this->_helper->viewRenderer('status', null, true);
@@ -174,24 +174,24 @@ class UserGroupController extends Zend_Rest_Controller
         //$key = $this->_getParam($this->_model->getFieldKey());
         if($this->remove($id))
         {
-            $this->view->code = 201;    
+            $this->view->code = 201;
             $this->view->message = 'Success';
-        }  
-        else    
-            $this->view->code = 500;    
+        }
+        else
+            $this->view->code = 500;
 
         $this->getResponse()->setHttpResponseCode($this->view->code);
         $this->_helper->viewRenderer('status', null, true);
     }
     /**
-    * Identifica se é uma atualização ou uma inserção de dados e 
+    * Identifica se é uma atualização ou uma inserção de dados e
     * grava-os no banco de acordo com a operação identificada.
     * @param Array / Object $fields
     * @return void
     */
     public function guardData($fields)
     {
-        //Obtem os campos do modelo corrente    
+        //Obtem os campos do modelo corrente
         $fieldNames = $this->_model->getFieldNames();
         foreach($fieldNames as $field)
             $data[$field] = urldecode(( is_array($fields) ? $fields[$field] : $fields->$field ));
@@ -204,7 +204,7 @@ class UserGroupController extends Zend_Rest_Controller
 
         if(!$form->isValid($data))
         {
-            $this->view->code = 422;            
+            $this->view->code = 422;
             foreach($fieldNames as $field)
             {
                 $return = $form->$field->getMessages();
@@ -232,11 +232,11 @@ class UserGroupController extends Zend_Rest_Controller
 
             if($this->save(strtolower($_SERVER['REQUEST_METHOD']),$data,$unlockedData))
             {
-                $this->view->code = 201;    
+                $this->view->code = 201;
                 $this->view->message = 'Success';
             }
-            else    
-                $this->view->code = 500;    
+            else
+                $this->view->code = 500;
         }
     }
     /**
@@ -257,7 +257,7 @@ class UserGroupController extends Zend_Rest_Controller
                 $return = Zend_Json::encode($result);
                 break;
         }
-        die($return);      
+        die($return);
     }
     /**
     * Retorna um array contendo o cabeçalho específico para o tipo passado.
@@ -266,7 +266,7 @@ class UserGroupController extends Zend_Rest_Controller
     */
     public function _getHeaders($type)
     {
-        switch ($type) 
+        switch ($type)
         {
             case 'json':
                 $arrHeader["expires"] = "Mon, 26 Jul 1997 05:00:00 GMT"; // Date in the past
@@ -274,9 +274,9 @@ class UserGroupController extends Zend_Rest_Controller
                 $arrHeader["cache-control"] = "no-cache, must-revalidate"; // HTTP/1.1
                 $arrHeader["pragma"] = "no-cache"; // HTTP/1.0
                 $arrHeader["content-type"] = "application/json";
-                break;        
+                break;
         }
-        $arrReturn = array();        
+        $arrReturn = array();
         foreach($arrHeader as $key => $value)
             $arrReturn[] = "{$key}: {$value}\n";
 
@@ -288,7 +288,7 @@ class UserGroupController extends Zend_Rest_Controller
      */
     public function save($action, array $data, array $unlockedData)
     {
-        try 
+        try
         {
             if ($action == "post")
                 $this->_model->insert($data);
@@ -304,7 +304,7 @@ class UserGroupController extends Zend_Rest_Controller
             return false;
         }
         return true;
-    }    
+    }
 
     public function remove($key)
     {
@@ -315,5 +315,5 @@ class UserGroupController extends Zend_Rest_Controller
             return false;
         }
         return true;
-    }    
+    }
 }
