@@ -102,8 +102,8 @@ class AbstractController extends Zend_Rest_Controller
             else
                 $resource = key($params);
         }
-        $arrElement = array();
 
+        $arrElement = array();
         if($resource == "form")
         {
             $record = array();
@@ -111,8 +111,8 @@ class AbstractController extends Zend_Rest_Controller
             {
                 $fieldKey = $this->_model->getFieldKey();
                 $record = $this->_model->fetchRow("{$fieldKey} = ".$params[$resource]);
-
             }
+
             //Obtem os campos do modelo corrente
             $arrFields = $this->_model->getFieldNames();
             foreach($arrFields as $field)
@@ -139,7 +139,7 @@ class AbstractController extends Zend_Rest_Controller
         else
             //Verifica se existe outros tratamentos para o resource passado
             if(method_exists($this,"othersResource"))
-                $this->othersResource($resource,$params);
+                $arrElement = $this->othersResource($resource,$params);
 
         //Converte em UTF8 para o retorno
         //$arrElement = array_map("utf8_encode",$arrElement);

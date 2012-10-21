@@ -14,8 +14,8 @@ class MovimentoHistorico extends Fgsl_Db_Table_Abstract
             'sequencia' => 'Número da nota',
             'descricao' => 'Observações',
             'valor_total' => 'Valor total',
+            'cliente' => 'Cliente / Fornecedor',
 //            'usu_codigo' => 'ID usuário',
-//            'cli_id' => 'Cliente / Fornecedor',
 //            'pgt_codigo' => 'Forma de pagamento',
 //            'est_codigo' => 'Local do estoque',
 //            'tmov_codigo' => 'Tipo de movimento',
@@ -70,6 +70,7 @@ class MovimentoHistorico extends Fgsl_Db_Table_Abstract
 */
         $this->_typeElement = array(
             'id' => Fgsl_Form_Constants::HIDDEN,
+            'cliente' => Fgsl_Form_Constants::HIDDEN,
             'data' => Fgsl_Form_Constants::TEXT,
             'sequencia' => Fgsl_Form_Constants::TEXT,
             'descricao' => Fgsl_Form_Constants::TEXTAREA,
