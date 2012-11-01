@@ -75,8 +75,8 @@ class AbstractController extends Zend_Rest_Controller
 
    public function indexAction()
    {
-        $result = $this->_model->fetchAll();
-        $arrTemp =  $result->toArray();
+        $arrTemp = $this->_model->fetchAllAsArray($this->_model->getCustomSelect(NULL,"",""));
+        $arrValues = array();
         //Converte em UTF8 para o retorno
         foreach($arrTemp as $rows)
             $arrValues[] = array_map("utf8_encode",$rows);
@@ -87,6 +87,7 @@ class AbstractController extends Zend_Rest_Controller
     public function getAction()
     {
         $id = $this->getRequest()->getParam('id');
+        $params = $arrElement = array();
         $resource = "";
         if(!empty($id) && is_numeric($id))
             $resource = "get";
@@ -103,7 +104,6 @@ class AbstractController extends Zend_Rest_Controller
                 $resource = key($params);
         }
 
-        $arrElement = array();
         if($resource == "form")
         {
             $record = array();
@@ -135,6 +135,18 @@ class AbstractController extends Zend_Rest_Controller
         }
         elseif($resource == "title")
             $arrElement = array('title' => $this->_model->getTitle());
+        elseif($resource == "get")
+        {
+            //TODO: Abstrair para não haver duplicidade com o código da opção FORM
+            $fieldKey = $this->_model->getFieldKey();
+            $record = $this->_model->fetchRow("{$fieldKey} = {$id}");
+            //Obtem os campos do modelo corrente
+            $arrFields = $this->_model->getFieldNames();
+            foreach($arrFields as $field)
+                $fields[$field] = (isset($record->$field) ? $record->$field : "");
+
+            $arrElement = $fields;
+        }
 
         else
             //Verifica se existe outros tratamentos para o resource passado
@@ -231,7 +243,8 @@ class AbstractController extends Zend_Rest_Controller
                 {
                     $message = $form->$field->getMessages();
                     $id = key($message);
-                    $this->view->message = $this->translate->translate($message[$id]);
+                    //TODO: Remover
+                    $this->view->message = $this->translate->translate("{$field} => " . $message[$id]);
                     break;
                 }
             }
@@ -252,7 +265,8 @@ class AbstractController extends Zend_Rest_Controller
             if($this->save(strtolower($_SERVER['REQUEST_METHOD']),$data,$unlockedData))
             {
                 $this->view->code = 201;
-                $this->view->message = 'Success';
+                //TODO: Pesquisar uma maneira melhor de passar o código do produto inserido
+                $this->view->message = /*'Success'*/ $this->_model->getAdapter()->lastInsertId();
             }
             else
                 $this->view->code = 500;

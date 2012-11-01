@@ -6,15 +6,16 @@ class MovimentoHistorico extends Fgsl_Db_Table_Abstract
 		{
 		parent::__construct();
 		$this->_fieldKey = 'id';
+        $this->_tbl_prefix = 'mvh_';
 		$this->_fieldNames = $this->_getCols();
 //		$this->_fieldNames[] = 'pro_lista';
 		$this->_fieldLabels = array(
             'id' => 'ID do movimento',
-            'data' => 'Data',
-            'sequencia' => 'Número da nota',
-            'descricao' => 'Observações',
-            'valor_total' => 'Valor total',
-            'cliente' => 'Cliente / Fornecedor',
+            $this->_tbl_prefix.'data' => 'Data',
+            $this->_tbl_prefix.'sequencia' => 'Número da nota',
+            $this->_tbl_prefix.'descricao' => 'Observações',
+            $this->_tbl_prefix.'valor_total' => 'Valor total',
+            $this->_tbl_prefix.'cliente' => 'Cliente / Fornecedor',
 //            'usu_codigo' => 'ID usuário',
 //            'pgt_codigo' => 'Forma de pagamento',
 //            'est_codigo' => 'Local do estoque',
@@ -23,22 +24,22 @@ class MovimentoHistorico extends Fgsl_Db_Table_Abstract
 			);
         //Seta atributos especias para os fields
         $this->_fieldOptions = array();
-        $this->_fieldOptions['descricao'] = array(
+        $this->_fieldOptions[$this->_tbl_prefix.'descricao'] = array(
             'setAttrib'=>array('maxLength'=>'256')
             );
-        $this->_fieldOptions['valor_total'] = array(
+        $this->_fieldOptions[$this->_tbl_prefix.'valor_total'] = array(
             'addValidator'=>array('NotEmpty'),
-            'setRequired'=>true,
-            'setAttrib'=>array('maxLength'=>'10', 'data'=>'money', 'required'=>'true')
+            // 'setRequired'=>true,
+            'setAttrib'=>array('maxLength'=>'10', 'data'=>'money'/*, 'required'=>'true'*/)
             );
-        $this->_fieldOptions['data'] = array(
+        $this->_fieldOptions[$this->_tbl_prefix.'data'] = array(
             'addValidator'=>array('NotEmpty'),
             'setRequired'=>true,
             'setAttrib'=>array('maxLength'=>'10', 'data'=>'data-ui', 'required'=>'true')
             );
 		//$this->_lockedFields = array('tmv_id');
 		$this->_orderField = 'id';
-		$this->_searchField = 'descricao';
+		$this->_searchField = $this->_tbl_prefix.'descricao';
 /*
     //Load Array de Tipos de Movimentos
 		Zend_Loader::loadClass('MovimentoTipo');
@@ -70,11 +71,11 @@ class MovimentoHistorico extends Fgsl_Db_Table_Abstract
 */
         $this->_typeElement = array(
             'id' => Fgsl_Form_Constants::HIDDEN,
-            'cliente' => Fgsl_Form_Constants::HIDDEN,
-            'data' => Fgsl_Form_Constants::TEXT,
-            'sequencia' => Fgsl_Form_Constants::TEXT,
-            'descricao' => Fgsl_Form_Constants::TEXTAREA,
-            'valor_total' => Fgsl_Form_Constants::TEXT,
+            $this->_tbl_prefix.'cliente' => Fgsl_Form_Constants::HIDDEN,
+            $this->_tbl_prefix.'data' => Fgsl_Form_Constants::TEXT,
+            $this->_tbl_prefix.'sequencia' => Fgsl_Form_Constants::TEXT,
+            $this->_tbl_prefix.'descricao' => Fgsl_Form_Constants::TEXT,
+            $this->_tbl_prefix.'valor_total' => Fgsl_Form_Constants::HIDDEN,
 //            'usu_codigo' => Fgsl_Form_Constants::TEXT,
 //            'cli_id' => Fgsl_Form_Constants::HIDDEN,
 //            'pgt_codigo' => Fgsl_Form_Constants::SELECT,
@@ -83,7 +84,7 @@ class MovimentoHistorico extends Fgsl_Db_Table_Abstract
 //            'pro_lista' => Fgsl_Form_Constants::HIDDEN
             );
 		}
-
+/*
 	public function insert(array $data)
 		{
 		$dataAuth = Fgsl_Session_Namespace::get('data_auth');
@@ -154,4 +155,5 @@ class MovimentoHistorico extends Fgsl_Db_Table_Abstract
 
 		parent::update($data,$where);
 		}
+*/
 	}
